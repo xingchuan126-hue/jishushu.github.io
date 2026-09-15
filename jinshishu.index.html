@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四年级上册 · 大数练习</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 12px;
+            margin: 0;
+        }
+
+        .app {
+            max-width: 1000px;
+            width: 100%;
+            background: #ffffff;
+            padding: 28px;
+            border-radius: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========== 首页 ========== */
+        .home-page {
+            text-align: center;
+        }
+
+        .home-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #4c1d95;
+            margin-bottom: 8px;
+        }
+
+        .home-subtitle {
+            font-size: 1rem;
+            color: #7c3aed;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            flex: 1 1 240px;
+            max-width: 320px;
+            border: none;
+            border-radius: 24px;
+            padding: 40px 24px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .mode-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-btn .mode-icon {
+            display: block;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .mode-btn .mode-desc {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .mode-approx {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .mode-compare {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+        }
+
+        /* ========== 练习页 ========== */
+        .practice-page {
+            display: none;
+        }
+
+        .practice-page.show {
+            display: block;
+        }
+
+        .practice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .practice-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #4c1d95;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 8px 18px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+        }
+
+        /* 题目列表 */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .question-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .question-item .q-num {
+            flex: 0 0 auto;
+            width: 40px;
+            height: 40px;
+            background: #8b5cf6;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
+
+        .question-item .q-content {
+            flex: 1 1 auto;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: 1px;
+        }
+
+        .question-item .q-content .num {
+            color: #4c1d95;
+        }
+
+        /* 比较题的数字排列 */
+        .compare-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .compare-num {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #4c1d95;
+            letter-spacing: 2px;
+        }
+
+        /* 填空框（比较符号） */
+        .fill-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 50px;
+            border: 3px dashed #94a3b8;
+            border-radius: 12px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #94a3b8;
+            background: #ffffff;
+            transition: all 0.3s;
+        }
+
+        /* 答案揭晓后 */
+        .answer-reveal {
+            margin-left: auto;
+            font-size: 1.1rem;
+            font-weight: 900;
+            padding: 6px 16px;
+            border-radius: 10px;
+            display: none;
+            white-space: nowrap;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .answer-reveal.correct-ans {
+            background: #dcfce7;
+            color: #15803d;
+            border: 2px solid #22c55e;
+        }
+
+        /* 近似数答案 */
+        .approx-answer {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #15803d;
+            background: #dcfce7;
+            padding: 6px 16px;
+            border-radius: 10px;
+            border: 2px solid #22c55e;
+            display: none;
+            white-space: nowrap;
+        }
+
+        .approx-answer.show {
+            display: block;
+        }
+
+        /* 操作按钮 */
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 34px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #ffffff;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-green { background: linear-gradient(135deg, #4ade80, #22c55e); }
+        .btn-orange { background: linear-gradient(135deg, #fb923c, #f97316); }
+        .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .btn-blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 700px) {
+            .app { padding: 18px; }
+            .home-title { font-size: 1.5rem; }
+            .mode-btn { padding: 28px 18px; font-size: 1.2rem; }
+            .question-item { padding: 12px 14px; gap: 10px; }
+            .question-item .q-content { font-size: 1.05rem; }
+            .compare-num { font-size: 1.2rem; }
+            .fill-box { width: 50px; height: 44px; font-size: 1.3rem; }
+            .btn { padding: 12px 22px; font-size: 1rem; }
+            .answer-reveal, .approx-answer { font-size: 0.95rem; padding: 4px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- ========== 首页 ========== -->
+        <div class="home-page" id="homePage">
+            <div class="home-title">📚 大数练习</div>
+            <div class="home-subtitle">四年级上册 · 求近似数 & 数的大小比较</div>
+            <div class="mode-buttons">
+                <button class="mode-btn mode-approx" id="approxModeBtn">
+                    <span class="mode-icon">🔢</span>
+                    求近似数
+                    <span class="mode-desc">省略万位后面的尾数，求近似数</span>
+                </button>
+                <button class="mode-btn mode-compare" id="compareModeBtn">
+                    <span class="mode-icon">⚖️</span>
+                    数的大小比较
+                    <span class="mode-desc">在○里填上 &gt;、&lt; 或 =</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== 练习页 ========== -->
+        <div class="practice-page" id="practicePage">
+            <div class="practice-header">
+                <button class="btn-back" id="backBtn">← 返回</button>
+                <div class="practice-title" id="practiceTitle">求近似数</div>
+                <div style="width:80px;"></div>
+            </div>
+
+            <!-- 题目列表 -->
+            <div class="question-list" id="questionList"></div>
+
+            <!-- 操作按钮 -->
+            <div class="action-bar">
+                <button class="btn btn-green" id="showAnswerBtn">✅ 出示答案</button>
+                <button class="btn btn-purple" id="newSetBtn">🔄 重新出题</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== 工具函数 ==========
+            // 四舍五入到万位
+            function roundToWan(num) {
+                const wan = Math.floor(num / 10000);
+                const remainder = num % 10000;
+                if (remainder >= 5000) return (wan + 1) * 10000;
+                else return wan * 10000;
+            }
+
+            // 数字转中文读法（简化版，用于提示）
+            function numToChinese(num) {
+                const cn = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+                const units = ['', '十', '百', '千', '万', '十万', '百万', '千万'];
+                if (num === 0) return '零';
+                const str = num.toString();
+                const len = str.length;
+                let result = '';
+                let zeroFlag = false;
+                for (let i = 0; i < len; i++) {
+                    const d = parseInt(str[i]);
+                    const pos = len - 1 - i;
+                    if (d === 0) {
+                        zeroFlag = true;
+                    } else {
+                        if (zeroFlag) {
+                            result += '零';
+                            zeroFlag = false;
+                        }
+                        result += cn[d] + units[pos];
+                    }
+                }
+                return result.replace(/^一十/, '十');
+            }
+
+            // 生成随机大数（6~8位）
+            function randomBigNum() {
+                const len = Math.floor(Math.random() * 3) + 6;
+                let str = '';
+                str += Math.floor(Math.random() * 9) + 1;
+                for (let i = 1; i < len; i++) {
+                    str += Math.floor(Math.random() * 10);
+                }
+                let num = parseInt(str, 10);
+                if (num % 10000 === 0) num += Math.floor(Math.random() * 9000) + 1;
+                return num;
+            }
+
+            // ========== 状态 ==========
+            let currentMode = 'approx'; // 'approx' 或 'compare'
+            let currentQuestions = [];
+            let answerShown = false;
+
+            // ========== DOM ==========
+            const homePage = document.getElementById('homePage');
+            const practicePage = document.getElementById('practicePage');
+            const practiceTitle = document.getElementById('practiceTitle');
+            const questionList = document.getElementById('questionList');
+            const showAnswerBtn = document.getElementById('showAnswerBtn');
+            const newSetBtn = document.getElementById('newSetBtn');
+            const backBtn = document.getElementById('backBtn');
+
+            // ========== 页面切换 ==========
+            function showPractice(mode) {
+                currentMode = mode;
+                homePage.style.display = 'none';
+                practicePage.classList.add('show');
+
+                if (mode === 'approx') {
+                    practiceTitle.textContent = '🔢 求近似数（省略万位后面的尾数）';
+                } else {
+                    practiceTitle.textContent = '⚖️ 数的大小比较（在○里填 >、< 或 =）';
+                }
+
+                generateNewSet();
+            }
+
+            function goHome() {
+                homePage.style.display = 'block';
+                practicePage.classList.remove('show');
+            }
+
+            // ========== 生成10道题 ==========
+            function generateNewSet() {
+                currentQuestions = [];
+                answerShown = false;
+                showAnswerBtn.textContent = '✅ 出示答案';
+                showAnswerBtn.disabled = false;
+
+                if (currentMode === 'approx') {
+                    generateApproxQuestions();
+                } else {
+                    generateCompareQuestions();
+                }
+
+                renderQuestions();
+            }
+
+            // ========== 生成近似数题目 ==========
+            function generateApproxQuestions() {
+                for (let i = 0; i < 10; i++) {
+                    const num = randomBigNum();
+                    const answer = roundToWan(num);
+                    const thousandDigit = Math.floor(num / 1000) % 10;
+                    currentQuestions.push({
+                        num: num,
+                        answer: answer,
+                        thousandDigit: thousandDigit,
+                        rule: thousandDigit >= 5 ? '五入' : '四舍'
+                    });
+                }
+            }
+
+            // ========== 生成比较大小题目 ==========
+            function generateCompareQuestions() {
+                for (let i = 0; i < 10; i++) {
+                    let a, b, answer;
+
+                    // 随机决定比较类型
+                    const type = Math.random();
+
+                    if (type < 0.3) {
+                        // 位数不同
+                        const lenA = Math.floor(Math.random() * 3) + 6; // 6~8位
+                        let lenB;
+                        do {
+                            lenB = Math.floor(Math.random() * 3) + 6;
+                        } while (lenB === lenA);
+                        a = randomNumWithLen(lenA);
+                        b = randomNumWithLen(lenB);
+                    } else if (type < 0.6) {
+                        // 位数相同，首位不同
+                        const len = Math.floor(Math.random() * 3) + 6;
+                        a = randomNumWithLen(len);
+                        b = randomNumWithLen(len);
+                        // 确保首位不同
+                        while (a.toString()[0] === b.toString()[0]) {
+                            b = randomNumWithLen(len);
+                        }
+                    } else if (type < 0.85) {
+                        // 位数相同，首位相同，后面不同
+                        const len = Math.floor(Math.random() * 3) + 6;
+                        a = randomNumWithLen(len);
+                        b = randomNumWithLen(len);
+                        // 确保首位相同，但整体不同
+                        while (a.toString()[0] !== b.toString()[0] || a === b) {
+                            b = randomNumWithLen(len);
+                        }
+                    } else {
+                        // 相等（偶尔出）
+                        const len = Math.floor(Math.random() * 3) + 6;
+                        a = randomNumWithLen(len);
+                        b = a;
+                    }
+
+                    if (a > b) answer = '>';
+                    else if (a < b) answer = '<';
+                    else answer = '=';
+
+                    currentQuestions.push({
+                        a: a,
+                        b: b,
+                        answer: answer
+                    });
+                }
+            }
+
+            // 生成指定位数的随机数
+            function randomNumWithLen(len) {
+                let str = '';
+                str += Math.floor(Math.random() * 9) + 1;
+                for (let i = 1; i < len; i++) {
+                    str += Math.floor(Math.random() * 10);
+                }
+                return parseInt(str, 10);
+            }
+
+            // ========== 渲染题目 ==========
+            function renderQuestions() {
+                questionList.innerHTML = '';
+
+                currentQuestions.forEach((q, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'question-item';
+
+                    // 题号
+                    const qNum = document.createElement('div');
+                    qNum.className = 'q-num';
+                    qNum.textContent = idx + 1;
+                    item.appendChild(qNum);
+
+                    if (currentMode === 'approx') {
+                        // 近似数题目
+                        const content = document.createElement('div');
+                        content.className = 'q-content';
+                        content.innerHTML = `省略万位后面的尾数：<span class="num">${q.num.toLocaleString()}</span> ≈ ______`;
+                        item.appendChild(content);
+
+                        // 答案（默认隐藏）
+                        const ans = document.createElement('div');
+                        ans.className = 'approx-answer';
+                        ans.id = `answer-${idx}`;
+                        const ruleText = q.thousandDigit >= 5
+                            ? `千位${q.thousandDigit}≥5，五入`
+                            : `千位${q.thousandDigit}<5，四舍`;
+                        ans.innerHTML = `${q.answer.toLocaleString()}（${ruleText}）`;
+                        item.appendChild(ans);
+                    } else {
+                        // 比较大小题目
+                        const content = document.createElement('div');
+                        content.className = 'q-content';
+                        content.innerHTML = `
+                            <div class="compare-row">
+                                <span class="compare-num">${q.a.toLocaleString()}</span>
+                                <span class="fill-box" id="fill-${idx}">?</span>
+                                <span class="compare-num">${q.b.toLocaleString()}</span>
+                            </div>
+                        `;
+                        item.appendChild(content);
+
+                        // 答案（默认隐藏）
+                        const ans = document.createElement('div');
+                        ans.className = 'answer-reveal correct-ans';
+                        ans.id = `answer-${idx}`;
+                        ans.textContent = q.answer;
+                        item.appendChild(ans);
+                    }
+
+                    questionList.appendChild(item);
+                });
+            }
+
+            // ========== 出示答案 ==========
+            function showAnswers() {
+                if (answerShown) return;
+                answerShown = true;
+                showAnswerBtn.textContent = '✅ 答案已出示';
+                showAnswerBtn.disabled = true;
+
+                currentQuestions.forEach((q, idx) => {
+                    if (currentMode === 'approx') {
+                        const ansEl = document.getElementById(`answer-${idx}`);
+                        if (ansEl) ansEl.classList.add('show');
+                    } else {
+                        const ansEl = document.getElementById(`answer-${idx}`);
+                        const fillEl = document.getElementById(`fill-${idx}`);
+                        if (ansEl) ansEl.classList.add('show');
+                        if (fillEl) {
+                            fillEl.textContent = q.answer;
+                            fillEl.style.borderColor = '#22c55e';
+                            fillEl.style.color = '#15803d';
+                            fillEl.style.borderStyle = 'solid';
+                            fillEl.style.background = '#dcfce7';
+                        }
+                    }
+                });
+            }
+
+            // ========== 事件绑定 ==========
+            document.getElementById('approxModeBtn').addEventListener('click', () => {
+                showPractice('approx');
+            });
+
+            document.getElementById('compareModeBtn').addEventListener('click', () => {
+                showPractice('compare');
+            });
+
+            backBtn.addEventListener('click', goHome);
+            showAnswerBtn.addEventListener('click', showAnswers);
+            newSetBtn.addEventListener('click', generateNewSet);
+
+            // ========== 初始化 ==========
+            // 默认显示首页
+        })();
+    </script>
+</body>
+</html>
